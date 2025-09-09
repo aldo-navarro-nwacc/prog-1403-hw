@@ -1,0 +1,30 @@
+Challenge:
+Your mission for this project is to accept two dates from the user and to calculate the number of weekends between those two dates.
+Here, we will define a weekend as a Saturday & Sunday, Saturday only, or Sunday only.
+The beginning and ending dates must be included in the determination.
+
+Rules:
+1. Print these three lines of text on the console
+    a. "HW1 - Counting Weekends"
+    b. "Solution by [name]
+    c. A blank line
+2. Getting two dates from the user - a start date and an end time. 
+Both dates must be entered from the console and be in one of the following formats:
+    a. m/d/y - where moth and day values may be 1 or 2 digits and the year may be 2 or 4 digits. 
+    a-i. A 2-digit year must be interpreted as occuring within the 21st century.
+    b. m/d - where the year is assumed to be 2025. Same rules for month and day as in 1 above.
+    c. y-m-d - where the values for month, day, and year must follow the same rules as in 1 above.
+3. Both dates must fall within the years 1800 - 2200 inclusive and must be valid dates (no 02/31)
+4. A weekend is defined as a Saturday, a Sunday, or both.
+5. Report the following results in an easy-to-read format on the console for each set of dates entered by the user:
+    a. The number of full Saturday-Sunday weekends between the dates
+    b. The number of Saturday-only weekends between the dates
+    c. The number of Sunday-only weekends between the dates
+6. Allow the user to repeat the process of entering pairs of dates and getting the weekend counts forever
+7. Print "HW1 Complete" in the console
+
+Restrictions:
+1. Any module used must be part of the Python Standard Library
+2. Do not allow your program to crash. All user inputs must be validated before being used or stored.
+3. Use functions freely and consolidate related functions into modules
+4. No AI generated work
