@@ -38,6 +38,7 @@ def countWeekends(m1:int, d1:int, y1:int, m2:int, d2:int, y2:int):
         print(f"Invalid date entered: {e}")
 
     # this is to avoid potential issues and keep the larger date first
+    past_flag = False
     if start > end:
         start, end = end, start
         past_flag = True # change the output to say "was" instead of "is"
@@ -71,9 +72,20 @@ def main():
             m1, d1, y1 = handleDates(user_input)
             m2, d2, y2 = handleDates(user_input2)
             
-            weekends, past_flag = countWeekends(m1, d1, y1, m2, d2, y2)
+            weekends, p_flag = countWeekends(m1, d1, y1, m2, d2, y2)
+            
+            # shouldn't happen, but if there's no output then nothing will happen
             if weekends != "":
-                print("")
+                # change the language of the output to make sense
+                if p_flag == True:
+                    p_flag = "after"
+                else: p_flag = "before"
+                # add an s 
+                if weekends > 1:
+                    mltpl = "s"
+
+                # print statement
+                print(f"The day {user_input} occured {weekends} weekend{mltpl} {p_flag} {user_input2}\n")
 
         except Exception as e:
             print(f"Error: {e}")
