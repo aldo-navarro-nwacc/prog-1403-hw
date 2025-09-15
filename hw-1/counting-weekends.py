@@ -5,7 +5,6 @@ def handleDates(u_input: str):
     dateFormats = [
         "%m/%d/%y",  # 12/05/20
         "%m/%d/%Y",  # 12/5/2020
-        "%m/%-d/%Y", # 12/5/2020
     ]
     # try to use strptime to derive dates
     for fmt in dateFormats:
@@ -22,6 +21,16 @@ def handleDates(u_input: str):
             year = "20" + year
         return int(month), int(day), int(year)
     raise ValueError(f"Not a valid date: {u_input}")
+
+def countWeekday(s: date, e: date, target_wd: int):
+    total = (e - s).days + 1
+    if total <= 0:
+        return 0
+    offset = (target_wd - s.weekday()) % 7
+    first = s + timedelta(days=offset)
+    if first > e:
+        return 0
+    return 1 + ((e - first).days // 7)
     
 def countWeekends(m1:int, d1:int, y1:int, m2:int, d2:int, y2:int):
     # check if the years allign with the intended range
@@ -38,25 +47,23 @@ def countWeekends(m1:int, d1:int, y1:int, m2:int, d2:int, y2:int):
         print(f"Invalid date entered: {e}")
 
     # this is to avoid potential issues and keep the larger date first
-    past_flag = False
     if start > end:
         start, end = end, start
-        past_flag = True # change the output to say "was" instead of "is"
 
-    # day count, inclusive
-    total_days = (end - start).days + 1
+    sat_count = countWeekday(start, end, 5)
+    sun_count = countWeekday(start, end, 6)
 
-    # divide the total day count into weeks, keeping the remainder
-    weekends, remainder = divmod(total_days, 7)
+    full_weekends = 0
+    sat = start + timedelta((5 - start.weekday()) % 7)
+    while sat <= end:
+        if sat + timedelta(days=1) <= end:
+            full_weekends += 1
+        sat += timedelta(days=7)
 
-    # check the remainder for a single weekend day
-    start_wd = start.weekday()
-    for i in range(remainder):
-        wd = (start_wd + 1) % 7
-        if wd in (5, 6): # Saturday or Sunday
-            weekends += 1
+    saturdays = sat_count - full_weekends
+    sundays = sun_count - full_weekends
 
-    return weekends, past_flag
+    return full_weekends, saturdays, sundays
 
 def main():
     print("HW1 - Counting Weekends\nSolution by Aldo Navarro\n\nFormat dates as such: m/d/y\n")
@@ -64,29 +71,25 @@ def main():
         try:
             user_input = input("Enter a starting date, or Q to quit > ")
             if user_input.lower() == "q":
+                print("HW1 Complete")
                 break        
+            m1, d1, y1 = handleDates(user_input)
 
             user_input2 = input("Enter a second date, or Q to quit > ")
             if user_input2.lower() == "q":
+                print("HW1 Complete")
                 break
-            m1, d1, y1 = handleDates(user_input)
             m2, d2, y2 = handleDates(user_input2)
             
-            weekends, p_flag = countWeekends(m1, d1, y1, m2, d2, y2)
+            weekends, sat, sun = countWeekends(m1, d1, y1, m2, d2, y2)
             
-            # shouldn't happen, but if there's no output then nothing will happen
-            if weekends != "":
-                # change the language of the output to make sense
-                if p_flag == True:
-                    p_flag = "after"
-                else: p_flag = "before"
-                # add an s 
-                if weekends > 1:
-                    mltpl = "s"
-
-                # print statement
-                print(f"The day {user_input} occured {weekends} weekend{mltpl} {p_flag} {user_input2}\n")
-
+            # print statement
+            print("")
+            print(f"Full Weekends: {weekends}")
+            print(f"Saturday-only weekends: {sat}")
+            print(f"Sunday-only weekends: {sun}")
+            print(f"Total Weekends: {weekends + sat + sun}")
+            print("")
         except Exception as e:
             print(f"Error: {e}")
 
