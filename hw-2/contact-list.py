@@ -8,12 +8,14 @@ class Contact():
     contact_list = [] # establish a contact list to read/write to
 
     def __init__(self, first_name:str, last_name:str, birth_date:str):
-        
+        self.stored_contact = []
         self.firstname = first_name.lower() # first name, stored in lower
         self.lastname = last_name.lower() # last name
-
         m, d, y = handleDates(birth_date) # test if birthday is real
-        self.birthday = date(y, m, d)
+        self.birthday = date(y, m, d) # store the birthday in iso format
+        self.stored_contact.append(self.firstname)
+        self.stored_contact.append(self.lastname)
+        self.stored_contact.append(self.birthday)
 
     def newContact(self, c_input):
         try:
@@ -27,7 +29,7 @@ def main():
     print("\nHW2 - Contact List\nSolution by Aldo Navarro\n")
     while True:
         try:
-            print("Menu Items:" \
+            print("\nMenu Items:" \
             "\n1. Enter a new Contact" \
             "\n2. Import Contacts from File" \
             "\n3. Display all loaded Contacts" \
@@ -42,11 +44,10 @@ def main():
                 in_lname = input("Enter the user's last name > ")
                 try:
                     in_bday = input("Enter the user's birthday > ")
-                    x = Contact(in_fname, in_lname, in_bday)
-                    Contact.newContact(Contact, x)
-                    print(Contact.contact_list)
-                except Exception as e:
-                    print(f"Error: {e}")
+                    x = Contact(in_fname, in_lname, in_bday) # prepare the contact
+                    Contact.newContact(Contact, x) # try to insert into the list
+                    print(Contact.contact_list[-1]) # print the list
+                except Exception as e: print(f"Error: {e}")
 
             if user_input == 2: # Import Contacts
                 print("WIP")
@@ -64,8 +65,7 @@ def main():
                 print("HW2 Complete")
                 break
 
-        except Exception as e:
-            print(f"Error: {e}")
+        except Exception as e: print(f"Error: {e}")
 
 if __name__ == "__main__":
     main()
