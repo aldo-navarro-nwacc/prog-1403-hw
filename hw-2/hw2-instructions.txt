@@ -13,7 +13,7 @@ Rules:
     a. First name
     b. Last name
     c. Birthdate
-3. Create a list to hold all oyour Contact objects. 
+3. Create a list to hold all your Contact objects. 
 The list must be maintained in alphabetical order, sorted by Last name and then First name
 
 4. Define a menu that will give the user the following choices by number:
