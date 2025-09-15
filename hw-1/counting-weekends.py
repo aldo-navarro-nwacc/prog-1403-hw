@@ -97,7 +97,7 @@ def countWeekends(m1:int, d1:int, y1:int, m2:int, d2:int, y2:int):
 
 def main():
     print("\nHW1 - Counting Weekends\nSolution by Aldo Navarro\n")
-    print("Format dates as such: y-m-d, m/d/y, m/d (will assume current year\n")
+    print("Format dates as such: y-m-d, m/d/y, m/d (will assume current year)\n")
     while True:
         try:
             user_input = input("Enter a starting date, or Q to quit > ")
