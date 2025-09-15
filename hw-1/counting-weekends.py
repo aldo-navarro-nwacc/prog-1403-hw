@@ -10,11 +10,19 @@ def handleDates(u_input: str):
     except ValueError:
         pass
     # yy-m-d
-    try:
-        dt = datetime.strptime(s, "%y-%m-%d")
-        return dt.month, dt.day, dt.year
-    except ValueError:
-        pass
+    if "-" in s:
+        parts = [p.strip() for p in s.split("-")]
+        if len(parts) == 3 and all(p.isdigit() for p in parts):
+            y_str, m_str, d_str = parts
+            if len(y_str) == 2:
+                y = 2000 + int(y_str)
+                m, d  = int(m_str), int(d_str)
+                try:
+                    date(y, m, d)
+                except ValueError as e:
+                    raise ValueError(f"{u_input} is not a valid date: {e}")
+                return m, d, y
+
     # m/d/yyyy
     try:
         dt = datetime.strptime(s, "%m/%d/%Y")
@@ -88,7 +96,8 @@ def countWeekends(m1:int, d1:int, y1:int, m2:int, d2:int, y2:int):
     return full_weekends, saturdays, sundays
 
 def main():
-    print("HW1 - Counting Weekends\nSolution by Aldo Navarro\n\nFormat dates as such: m/d/y\n")
+    print("\nHW1 - Counting Weekends\nSolution by Aldo Navarro\n")
+    print("Format dates as such: y-m-d, m/d/y, m/d (will assume current year\n")
     while True:
         try:
             user_input = input("Enter a starting date, or Q to quit > ")
