@@ -1,26 +1,52 @@
-# this is a python file, be patient!
+# HW1 - Aldo Navarro - PROG 1403 Fall 2025
 from datetime import datetime, date, timedelta
 
 def handleDates(u_input: str):
-    dateFormats = [
-        "%m/%d/%y",  # 12/05/20
-        "%m/%d/%Y",  # 12/5/2020
-    ]
-    # try to use strptime to derive dates
-    for fmt in dateFormats:
+    s = u_input.strip()
+    # yyyy-m-d
+    try:
+        dt = datetime.strptime(s, "%Y-%m-%d")
+        return dt.month, dt.day, dt.year
+    except ValueError:
+        pass
+    # yy-m-d
+    try:
+        dt = datetime.strptime(s, "%y-%m-%d")
+        return dt.month, dt.day, dt.year
+    except ValueError:
+        pass
+    # m/d/yyyy
+    try:
+        dt = datetime.strptime(s, "%m/%d/%Y")
+        return dt.month, dt.day, dt.year
+    except ValueError:
+        pass
+
+    parts = [p.strip() for p in s.split("/")]
+    # m/d/yy
+    if len(parts) == 3 and all(p.isdigit() for p in parts):
+        m_str, d_str, y_str = parts
+        if len(y_str) == 2:
+            y = 2000 + int(y_str)
+        else: y = int(y_str)
+
+        m, d = int(m_str), int(d_str)
         try:
-            dtx = datetime.strptime(u_input, fmt)
-            return dtx.month, dtx.day, dtx.year
-        except ValueError:
-            continue
-    # split the numbers into actual integers
-    parts = u_input.split("/")
-    if len(parts) == 3:
-        month, day, year = parts
-        if len(year) == 2:
-            year = "20" + year
-        return int(month), int(day), int(year)
-    raise ValueError(f"Not a valid date: {u_input}")
+            date(y, m, d)
+        except ValueError as e:
+            raise ValueError(f"{u_input} is not a valid date: {e}")
+        return m, d, y
+    # m/d
+    if len(parts) == 2 and all(p.isdigit() for p in parts):
+        m, d = int(parts[0]), int(parts[1])
+        y = datetime.now().year
+        try:
+            date(y, m, d)
+        except ValueError as e:
+            raise ValueError(f"{u_input} is not a valid date: {e}")
+        return m, d, y
+    
+    raise ValueError("Unsupported date format. Use: y-m-d, m/d/y, m/d")
 
 def countWeekday(s: date, e: date, target_wd: int):
     total = (e - s).days + 1
@@ -39,13 +65,9 @@ def countWeekends(m1:int, d1:int, y1:int, m2:int, d2:int, y2:int):
     if not 1800 < y2 < 2200:
         raise ValueError(f"{y2} is out of the intended date range of 1800 - 2200.")    
     
-    # test if dates are real
-    try:
-        start = date(y1, m1, d1)
-        end = date(y2, m2, d2)
-    except ValueError as e:
-        print(f"Invalid date entered: {e}")
-
+    start = date(y1, m1, d1)
+    end = date(y2, m2, d2)
+    
     # this is to avoid potential issues and keep the larger date first
     if start > end:
         start, end = end, start
