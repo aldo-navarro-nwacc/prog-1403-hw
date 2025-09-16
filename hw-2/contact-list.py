@@ -17,34 +17,24 @@ class Contact():
         self.birthday = date(y, m, d) # store the birthday in iso format
 
         # store each piece into the list
-        self._contact.append(first_name.lower())
         self._contact.append(last_name.lower())
+        self._contact.append(first_name.lower())
         self._contact.append(self.birthday)
 
-    def contactBook(input):
-        contact_book = [] # list to store every contact loaded into memory
+class ContactBook():
+
+    contact_book = [] # list of lists to store all contacts
+
+    def insertContact(self, input):
         try:
-            contact_book.append(input)
-        except Exception as e: print(f"Error: {e}")
-
-    def newContact(self, c_input):
-        try:
-            new_contact = c_input
-            self.contactBook(c_input)
-            return
-        except Exception as e: print(f"Failed to add contact: {e}") 
-
-
-def otherContactbook(input):
-    other_contact_book = []
-    try:
-        other_contact_book.append(input)
-    except Exception as e: print(f"Failed to add contact: {e}")
-    return 
-
+            self.contact_book.append(input)
+        except Exception as e: print(f"Failed to add contact: {e}")
+        return 
+    
 
 def main():
     print("\nHW2 - Contact List\nSolution by Aldo Navarro\n")
+    book = ContactBook() # init the book
     while True:
         try:
             print("\nMenu Items:" \
@@ -63,8 +53,9 @@ def main():
                 try:
                     in_bday = input("Enter the user's birthday > ")
                     selected_contact = Contact(in_fname, in_lname, in_bday) # prepare the contact
-                    otherContactbook(selected_contact) # try to insert into the book
+                    book.insertContact(selected_contact._contact) # try to insert just the list into the book
                     print(selected_contact, selected_contact._contact) # print the list
+                    print(book.contact_book) # print the whole book
                 except Exception as e: print(f"Error: {e}")
 
             if user_input == 2: # Import Contacts
