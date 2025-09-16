@@ -31,6 +31,14 @@ class ContactBook():
         except Exception as e: print(f"Failed to add contact: {e}")
         return 
     
+    def removeContactbyName(self, first, last):
+        first, last = first.lower(), last.lower() # Clean the inputs
+        index = next((i for i, r in enumerate(self.contact_book) if first in r and last in r), -1)
+        try:
+            del self.contact_book[index]
+        except IndexError as e: print(f"Error removing contact: {e}")
+        return
+    
 
 def main():
     print("\nHW2 - Contact List\nSolution by Aldo Navarro\n")
@@ -45,30 +53,40 @@ def main():
             "\n5. Delete a loaded Contact" \
             "\n6. Exit")
             user_input = 0 # clear the input
+            t_flag = False # temp flag, init and clear
             user_input = int(input("Enter a menu item > "))
 
             if user_input == 1: # New Contact
+                t_flag = True
                 in_fname = input("Enter the user's first name > ")
                 in_lname = input("Enter the user's last name > ")
-                try:
-                    in_bday = input("Enter the user's birthday > ")
-                    selected_contact = Contact(in_fname, in_lname, in_bday) # prepare the contact
-                    book.insertContact(selected_contact._contact) # try to insert just the list into the book
-                    print(selected_contact, selected_contact._contact) # print the list
-                    print(book.contact_book) # print the whole book
-                except Exception as e: print(f"Error: {e}")
+                while t_flag:
+                    try:
+                        in_bday = input("Enter the user's birthday > ")
+                        selected_contact = Contact(in_fname, in_lname, in_bday) # prepare the contact
+                        book.insertContact(selected_contact._contact) # try to insert just the list into the book
+                        print(selected_contact, selected_contact._contact) # print the list
+                        t_flag = False # break from the loop
+                    except Exception as e: print(f"Error: {e}")
 
             if user_input == 2: # Import Contacts
                 print("WIP")
 
             if user_input == 3: # Display all Contacts
-                print("WIP") 
+                print(book.contact_book)
             
             if user_input == 4: # Export all Contacts
                 print("WIP") 
             
             if user_input == 5: # Delete a Contact
-                print("WIP") 
+                user_input = input("Remove contact by [N]ame, [P]osition, or [E]xit > ")
+                if user_input[0].upper() == "N":
+                    in_fname = input("Enter the user's first name > ")
+                    in_lname = input("Enter the user's last name > ")
+                    book.removeContactbyName(in_fname, in_lname)
+                if user_input[0].upper() == "P":
+                    in_pos = input("Enter the contact's position in the list > ")
+                
 
             if user_input == 6: # Exit
                 print("HW2 Complete")
