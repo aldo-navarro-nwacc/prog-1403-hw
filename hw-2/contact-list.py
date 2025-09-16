@@ -1,5 +1,5 @@
 # pretend it works
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from dateCheck import handleDates
 import csv
 
@@ -26,6 +26,7 @@ class ContactBook():
     contact_book = [] # list of lists to store all contacts
 
     def sortBook(self):
+        # Sorts the book by last name.
         self.contact_book.sort()
         return
 
@@ -35,24 +36,27 @@ class ContactBook():
             output = self.contact_book[input]
         except IndexError as e: return None
         return output
+    
+    def searchContactbyName(self, fname, lname):
+        #Try to find a contact by name. Returns the index if found, None if not.
+        fname, lname = fname.lower(), lname.lower() # Clean the inputs
+        try:
+            index = next((i for i, r in enumerate(self.contact_book) if fname in r and lname in r), -1)
+        except IndexError as e: return None
+        return index
 
     def insertContact(self, input):
+        # Appends a contact to the end of the book.
         try:
             self.contact_book.append(input)
         except Exception as e: print(f"!! Failed to add contact: {e}")
         return 
     
-    def removeContactbyName(self, first, last):
-        first, last = first.lower(), last.lower() # Clean the inputs
-        index = next((i for i, r in enumerate(self.contact_book) if first in r and last in r), -1)
+    def removeContactbyIndex(self, index:int):
+        # Try to delete a contact by index, returns True if it passes and False if not
+        # Note that there is no double checking here, this will delete a contact if it exists
         try:
             del self.contact_book[index]
-            return True
-        except IndexError as e: print(f"!! Error deleting contact: {e}"); return False
-    
-    def removeContactbyIndex(self, pos:int):
-        try:
-            del self.contact_book[pos]
             return True
         except IndexError as e: print(f"!! Error deleting contact: {e}"); return False
 
@@ -68,8 +72,9 @@ def main():
             "\n4. Export all Contacts to a file" \
             "\n5. Delete a loaded Contact" \
             "\n6. Exit")
-            user_input = 0 # clear the input
-            t_flag = False # temp flag, init and clear
+            user_input, t_flag, val, = 0, False, False # clear the input and flags
+            in_fname, in_lname, in_bday, in_pos, x = "", "", "", "", "" # clear variable names just in case
+            
             user_input = int(input("Enter a menu item > "))
 
             if user_input == 1: # New Contact
@@ -97,31 +102,40 @@ def main():
             
             if user_input == 5: # Delete a Contact
                 user_input = input(" - Remove contact by [N]ame, [P]osition, or [E]xit > ")
+
                 if user_input[0].upper() == "N": # by name
                     in_fname = input(" - - Enter the user's first name > ")
                     in_lname = input(" - - Enter the user's last name > ")
-                    val = book.removeContactbyName(in_fname, in_lname)
-                    if val == True:
-                        print(f" - Deleted the contact {in_fname.capitalize()} {in_lname.capitalize()}.\n")
-                    else:
-                        print(f"!! Failed to delete the contact, please try again.\n")
+                    in_pos = book.searchContactbyName(in_fname, in_lname)
+                    x = book.searchContactbyIndex(in_pos)
+                    if x != None: # if user is found
+                        user_input = input(f" - - Are you sure you want to remove the contact {x[1]} {x[0]}? [y/N] > ")
+                        if user_input[0].upper() == "Y": # if user confirms
+                            val = book.removeContactbyIndex(in_pos)
+                            if val == True:
+                                print(f" - Deleted the contact {x[1]} {x[0]} in position {in_pos}.")
+                            else: 
+                                print(f"!! Failed to delete the contact, please try again.\n") # if deletion fails for some reason
+                        else: print(" - Operation canceled, no contact was deleted.") # if user declines
+                    else: print("!! No contact by that name, please verify and try again.") # no contact found
 
                 if user_input[0].upper() == "P": # by position in the list
                     in_pos = input(" - - Enter the contact's position in the list > ")
                     try:
                         in_pos = int(in_pos)
+                        in_pos -= 1 # account for the 0 start in a list, so users can just count.
                     except ValueError as e: print(f"! This is not a number.")
                     x = book.searchContactbyIndex(in_pos)
-                    if x != None:
-                        user_input = input(f" - - Are you sure you want to remove the contact {x[1], x[0]}? y/N > ")
-                        if user_input[0].upper() == "Y":
+                    if x != None: # if user is found
+                        user_input = input(f" - - Are you sure you want to remove the contact {x[1]} {x[0]}? [y/N] > ")
+                        if user_input[0].upper() == "Y": # if user confirms
                             val = book.removeContactbyIndex(in_pos)
                             if val == True:
-                                print(f" - Deleted the contact in position {in_pos}.\n")
-                            else:
-                                print(f"!! Failed to delete the contact, please try again.\n")
-                        else: print(" - Did not delete the contact.")
-                    else: print("!! No contact in that position, please verify and try again.")
+                                print(f" - Deleted the contact in position {in_pos}.")
+                            else: 
+                                print(f"!! Failed to delete the contact, please try again.\n") # if deletion fails for some reason
+                        else: print(" - Operation canceled, no contact was deleted.") # if user declines
+                    else: print("!! No contact in that position, please verify and try again.") # no position found
                     
             if user_input == 6: # Exit
                 print("HW2 Complete")
