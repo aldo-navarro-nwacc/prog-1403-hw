@@ -29,6 +29,24 @@ class ContactBook():
         # Sorts the book by last name.
         self.contact_book.sort()
         return
+    
+    def showBook(self):
+        self.contact_book.sort() # Sort prior to listing
+        print(f"\n{'Last Name':<20}{'First Name':<20}{'Birthday':<10}{'Age':<10}")
+
+        for row in self.contact_book:
+            fixed_row = []
+            for item in row:
+                if isinstance(item, str):
+                    fixed_row.append(item.title())
+                elif isinstance(item, date):
+                    fixed_row.append(item.strftime("%Y-%m-%d"))
+                else:
+                    fixed_row.append(str(item))
+        first, last, bday = row
+        print(f"{first.title():<20}{last.title():<20}{bday:%Y-%m-%d}")
+
+        return
 
     def searchContactbyIndex(self, input): 
         # Try to find a contact by index, outputs the contact if it is found, None if not 
@@ -38,7 +56,7 @@ class ContactBook():
         return output
     
     def searchContactbyName(self, fname, lname):
-        #Try to find a contact by name. Returns the index if found, None if not.
+        # Try to find a contact by name. Returns the index if found, None if not.
         fname, lname = fname.lower(), lname.lower() # Clean the inputs
         try:
             index = next((i for i, r in enumerate(self.contact_book) if fname in r and lname in r), -1)
@@ -86,16 +104,16 @@ def main():
                         in_bday = input(" - Enter the user's birthday > ")
                         selected_contact = Contact(in_fname, in_lname, in_bday) # prepare the contact
                         book.insertContact(selected_contact._contact) # try to insert just the list into the book
-                        print(selected_contact, selected_contact._contact) # print the list
+                        print(f" - - The contact {in_fname} {in_lname} has been added successfully.") # print the list
                         t_flag = False # break from the loop
-                    except Exception as e: print(f"!! Error: {e}")
+                    except Exception as e: print(f"!! Error adding the contact: {e}")
 
             if user_input == 2: # Import Contacts
                 print("WIP")
 
             if user_input == 3: # Display all Contacts
                 book.sortBook()
-                print(book.contact_book)
+                book.showBook()
             
             if user_input == 4: # Export all Contacts
                 print("WIP") 
