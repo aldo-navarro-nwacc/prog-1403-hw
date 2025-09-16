@@ -1,28 +1,46 @@
 # pretend it works
 from datetime import date, datetime
 from dateCheck import handleDates
-
+import csv
 
 class Contact():
     
-    contact_list = [] # establish a contact list to read/write to
-
     def __init__(self, first_name:str, last_name:str, birth_date:str):
-        self.stored_contact = []
+
+        self._contact = [] # initialize the list to store the information
+        # note that this list is where the actual contact will be held in memory
+
+        # self variables are just to call upon, like person.lastname would return "smith"
         self.firstname = first_name.lower() # first name, stored in lower
         self.lastname = last_name.lower() # last name
         m, d, y = handleDates(birth_date) # test if birthday is real
         self.birthday = date(y, m, d) # store the birthday in iso format
-        self.stored_contact.append(self.firstname)
-        self.stored_contact.append(self.lastname)
-        self.stored_contact.append(self.birthday)
+
+        # store each piece into the list
+        self._contact.append(first_name.lower())
+        self._contact.append(last_name.lower())
+        self._contact.append(self.birthday)
+
+    def contactBook(input):
+        contact_book = [] # list to store every contact loaded into memory
+        try:
+            contact_book.append(input)
+        except Exception as e: print(f"Error: {e}")
 
     def newContact(self, c_input):
         try:
             new_contact = c_input
-            self.contact_list.append(new_contact)
+            self.contactBook(c_input)
             return
         except Exception as e: print(f"Failed to add contact: {e}") 
+
+
+def otherContactbook(input):
+    other_contact_book = []
+    try:
+        other_contact_book.append(input)
+    except Exception as e: print(f"Failed to add contact: {e}")
+    return 
 
 
 def main():
@@ -44,9 +62,9 @@ def main():
                 in_lname = input("Enter the user's last name > ")
                 try:
                     in_bday = input("Enter the user's birthday > ")
-                    x = Contact(in_fname, in_lname, in_bday) # prepare the contact
-                    Contact.newContact(Contact, x) # try to insert into the list
-                    print(Contact.contact_list[-1]) # print the list
+                    selected_contact = Contact(in_fname, in_lname, in_bday) # prepare the contact
+                    otherContactbook(selected_contact) # try to insert into the book
+                    print(selected_contact, selected_contact._contact) # print the list
                 except Exception as e: print(f"Error: {e}")
 
             if user_input == 2: # Import Contacts

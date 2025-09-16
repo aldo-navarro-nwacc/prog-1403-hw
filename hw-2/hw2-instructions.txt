@@ -9,10 +9,12 @@ Rules:
     a. "HW2 - Contact List"
     b. "Solution by [name]"
     c. A blank line
+    
 2. Define a Contact class containing at least the following data fields:
     a. First name
     b. Last name
     c. Birthdate
+
 3. Create a list to hold all your Contact objects. 
 The list must be maintained in alphabetical order, sorted by Last name and then First name
 
