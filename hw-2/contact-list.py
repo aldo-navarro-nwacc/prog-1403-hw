@@ -32,10 +32,11 @@ class ContactBook():
     
     def showBook(self):
         self.contact_book.sort() # Sort prior to listing
-        print(f"\n{'Last Name':<20}{'First Name':<20}{'Birthday':<10}{'Age':<10}")
-
+        print(f"{'#':<3}{'Last Name':<20}{'First Name':<20}{'Birthday':<10}{'Age':<10}")
+        counter = 0
         for row in self.contact_book:
             fixed_row = []
+            counter += 1
             for item in row:
                 if isinstance(item, str):
                     fixed_row.append(item.title())
@@ -43,8 +44,8 @@ class ContactBook():
                     fixed_row.append(item.strftime("%Y-%m-%d"))
                 else:
                     fixed_row.append(str(item))
-        first, last, bday = row
-        print(f"{first.title():<20}{last.title():<20}{bday:%Y-%m-%d}")
+            first, last, bday = row
+            print(f"{counter:<3}{first.title():<20}{last.title():<20}{bday:%Y-%m-%d}")
 
         return
 
@@ -60,8 +61,11 @@ class ContactBook():
         fname, lname = fname.lower(), lname.lower() # Clean the inputs
         try:
             index = next((i for i, r in enumerate(self.contact_book) if fname in r and lname in r), -1)
-        except IndexError as e: return None
-        return index
+        except IndexError: return None
+        except TypeError: return None
+        if index == -1: # fix having nobody with that name and defaulting to end of list
+            return None
+        else: return index
 
     def insertContact(self, input):
         # Appends a contact to the end of the book.
@@ -127,11 +131,11 @@ def main():
                     in_pos = book.searchContactbyName(in_fname, in_lname)
                     x = book.searchContactbyIndex(in_pos)
                     if x != None: # if user is found
-                        user_input = input(f" - - Are you sure you want to remove the contact {x[1]} {x[0]}? [y/N] > ")
+                        user_input = input(f" - - Are you sure you want to remove the contact {x[1].title()} {x[0].title()}? [y/N] > ")
                         if user_input[0].upper() == "Y": # if user confirms
                             val = book.removeContactbyIndex(in_pos)
                             if val == True:
-                                print(f" - Deleted the contact {x[1]} {x[0]} in position {in_pos}.")
+                                print(f" - Deleted the contact {x[1].title()} {x[0].title()} in position {in_pos + 1}.")
                             else: 
                                 print(f"!! Failed to delete the contact, please try again.\n") # if deletion fails for some reason
                         else: print(" - Operation canceled, no contact was deleted.") # if user declines
@@ -145,11 +149,11 @@ def main():
                     except ValueError as e: print(f"! This is not a number.")
                     x = book.searchContactbyIndex(in_pos)
                     if x != None: # if user is found
-                        user_input = input(f" - - Are you sure you want to remove the contact {x[1]} {x[0]}? [y/N] > ")
+                        user_input = input(f" - - Are you sure you want to remove the contact {x[1].title()} {x[0].title()}? [y/N] > ")
                         if user_input[0].upper() == "Y": # if user confirms
                             val = book.removeContactbyIndex(in_pos)
                             if val == True:
-                                print(f" - Deleted the contact in position {in_pos}.")
+                                print(f" - Deleted the contact {x[1].title()} {x[0].title()} in position {in_pos + 1}.")
                             else: 
                                 print(f"!! Failed to delete the contact, please try again.\n") # if deletion fails for some reason
                         else: print(" - Operation canceled, no contact was deleted.") # if user declines
@@ -158,7 +162,8 @@ def main():
             if user_input == 6: # Exit
                 print("HW2 Complete")
                 break
-
+        except ValueError: print() # should just omit errors when pressing enter and passing '', hopefully
+        except TypeError: print("!! No contact by that name, please verify and try again.") # message for the contact search
         except Exception as e: print(f"!!! Error: {e}")
 
 if __name__ == "__main__":
