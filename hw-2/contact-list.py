@@ -1,7 +1,7 @@
 # pretend it works
 from datetime import date, datetime, timedelta
 from dateCheck import handleDates
-import csv
+import csv, os
 
 class Contact():
     
@@ -82,6 +82,16 @@ class ContactBook():
             return True
         except IndexError as e: print(f"!! Error deleting contact: {e}"); return False
 
+    def readFromCSV(self):
+        dir = os.path.dirname(__file__)
+        contacts_csv = os.path.join(dir, "file.csv")
+        with open(contacts_csv, 'r', newline='') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',')
+            for row in filereader:
+                self.insertContact(row)
+
+            
+
 def main():
     print("\nHW2 - Contact List\nSolution by Aldo Navarro\n")
     book = ContactBook() # init the book
@@ -113,7 +123,8 @@ def main():
                     except Exception as e: print(f"!! Error adding the contact: {e}")
 
             if user_input == 2: # Import Contacts
-                print("WIP")
+                book.readFromCSV()
+                print(book.contact_book)
 
             if user_input == 3: # Display all Contacts
                 book.sortBook()
