@@ -1,7 +1,7 @@
-# pretend it works
+# pretend it works - because it does
 from datetime import date, datetime, timedelta
 from dateCheck import handleDates
-import csv, os
+import csv
 
 class Contact():
     
@@ -32,20 +32,25 @@ class ContactBook():
     
     def showBook(self):
         self.contact_book.sort() # Sort prior to listing
-        print(f"{'#':<3}{'Last Name':<20}{'First Name':<20}{'Birthday':<10}{'Age':<10}")
+        print(f"{'#':<3}{'Last Name':<20}{'First Name':<20}{'Birthday':<10} {'Age':<4}")
         counter = 0
+        today = date.today() # used for age calculation
         for row in self.contact_book:
             fixed_row = []
-            counter += 1
+            counter += 1 # number next to entry
             for item in row:
                 if isinstance(item, str):
                     fixed_row.append(item.title())
                 elif isinstance(item, date):
+                    bdaycalc = item
                     fixed_row.append(item.strftime("%Y-%m-%d"))
                 else:
                     fixed_row.append(str(item))
+            age = today.year - bdaycalc.year
+            if (today.month, today.day) < (bdaycalc.month, bdaycalc.day): # check if birthday has passed
+                age -= 1
             first, last, bday = row
-            print(f"{counter:<3}{first.title():<20}{last.title():<20}{bday:%Y-%m-%d}")
+            print(f"{counter:<3}{first.title():<20}{last.title():<20}{bday:%Y-%m-%d} {age:<4}")
 
         return
 
@@ -83,13 +88,11 @@ class ContactBook():
         except IndexError as e: print(f"!! Error deleting contact: {e}"); return False
 
     def readFromCSV(self):
-#        dir = os.path.dirname(__file__)
-#        contacts_csv = os.path.join(dir, "file.csv")
         try:
             with open("Contacts.csv", 'r', newline='') as csvfile:
                 filereader = csv.reader(csvfile, delimiter=',')
                 for row in filereader:
-                    t_contact = Contact(row[0], row[1], row[2])
+                    t_contact = Contact(row[1], row[0], row[2])
                     self.insertContact(t_contact._contact)
             return True
         except IOError as e: print(f"!! Error: file 'Contacts.csv' not found: {e}"); return False
@@ -101,7 +104,9 @@ class ContactBook():
                 filewriter = csv.writer(csvfile, delimiter=',')
                 for row in self.contact_book:
                     filewriter.writerow(row)
-        except Exception as e: print(f"!! Error: {e}")
+            return True
+        except IOError as e: print(f"Unable to write to file, please try again. {e}"); return False
+        except Exception as e: print(f"!! Error: {e}"); return False
 
             
 
@@ -147,7 +152,10 @@ def main():
             
             if user_input == 4: # Export all Contacts
                 book.sortBook() # sort the book prior to export
-                book.writeToCSV() 
+                val = book.writeToCSV()
+                if val == True:
+                    print(f" - Contacts exported successfully.")
+                else: print(f"!! No contacts exported, please try again.")
             
             if user_input == 5: # Delete a Contact
                 user_input = input(" - Remove contact by [N]ame, [P]osition, or [E]xit > ")
@@ -190,8 +198,9 @@ def main():
                 print("HW2 Complete")
                 break
         except ValueError: print() # should just omit errors when pressing enter and passing '', hopefully
-        except TypeError: print("!! No contact by that name, please verify and try again.") # message for the contact search
+        except TypeError as e: print(f"!! No contact by that name, please verify and try again. {e}") # message for the contact search
         except Exception as e: print(f"!!! Error: {e}")
+        except KeyboardInterrupt: print("\nHW2 Complete"); break
 
 if __name__ == "__main__":
     main()
