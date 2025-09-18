@@ -5,3 +5,6 @@ venv/
 
 .DS_Store
 Thumbs.db
+Contacts.csv
+test.csv
+test_csv_func.py

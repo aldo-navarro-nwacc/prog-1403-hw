@@ -83,12 +83,13 @@ class ContactBook():
         except IndexError as e: print(f"!! Error deleting contact: {e}"); return False
 
     def readFromCSV(self):
-        dir = os.path.dirname(__file__)
-        contacts_csv = os.path.join(dir, "file.csv")
-        with open(contacts_csv, 'r', newline='') as csvfile:
+#        dir = os.path.dirname(__file__)
+#        contacts_csv = os.path.join(dir, "file.csv")
+        with open("Contacts.csv", 'r', newline='') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',')
             for row in filereader:
-                self.insertContact(row)
+                t_contact = Contact(row[0], row[1], row[2])
+                self.insertContact(t_contact)
 
             
 
