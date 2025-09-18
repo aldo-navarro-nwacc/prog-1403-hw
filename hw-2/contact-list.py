@@ -85,12 +85,15 @@ class ContactBook():
     def readFromCSV(self):
 #        dir = os.path.dirname(__file__)
 #        contacts_csv = os.path.join(dir, "file.csv")
-        with open("Contacts.csv", 'r', newline='') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',')
-            for row in filereader:
-                t_contact = Contact(row[0], row[1], row[2])
-                self.insertContact(t_contact)
-
+        try:
+            with open("Contacts.csv", 'r', newline='') as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',')
+                for row in filereader:
+                    t_contact = Contact(row[0], row[1], row[2])
+                    self.insertContact(t_contact._contact)
+            return True
+        except IOError as e: print(f"!! Error: file 'Contacts.csv' not found: {e}"); return False
+        except Exception as e: print(f"!! Error: {e}"); return False
             
 
 def main():
@@ -124,9 +127,11 @@ def main():
                     except Exception as e: print(f"!! Error adding the contact: {e}")
 
             if user_input == 2: # Import Contacts
-                book.readFromCSV()
-                print(book.contact_book)
-
+                val = book.readFromCSV()
+                if val == True:
+                    print(f" - Contacts imported successfully.")
+                else: print(f"!! No contacts imported, please check your file and try again")
+                    
             if user_input == 3: # Display all Contacts
                 book.sortBook()
                 book.showBook()
