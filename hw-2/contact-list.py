@@ -94,6 +94,15 @@ class ContactBook():
             return True
         except IOError as e: print(f"!! Error: file 'Contacts.csv' not found: {e}"); return False
         except Exception as e: print(f"!! Error: {e}"); return False
+
+    def writeToCSV(self):
+        try:
+            with open("Contacts.csv", "w", newline='') as csvfile:
+                filewriter = csv.writer(csvfile, delimiter=',')
+                for row in self.contact_book:
+                    filewriter.writerow(row)
+        except Exception as e: print(f"!! Error: {e}")
+
             
 
 def main():
@@ -137,7 +146,8 @@ def main():
                 book.showBook()
             
             if user_input == 4: # Export all Contacts
-                print("WIP") 
+                book.sortBook() # sort the book prior to export
+                book.writeToCSV() 
             
             if user_input == 5: # Delete a Contact
                 user_input = input(" - Remove contact by [N]ame, [P]osition, or [E]xit > ")
