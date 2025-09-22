@@ -8,7 +8,7 @@ class Contact():
     def __init__(self, first_name:str, last_name:str, birth_date:str):
 
         self._contact = [] # initialize the list to store the information
-        # note that this list is where the actual contact will be held in memory
+        # note that this list is where the actual contact will be held in memory, not the book
 
         # self variables are just to call upon, like person.lastname would return "smith"
         self.firstname = first_name.lower() # first name, stored in lower
@@ -23,7 +23,8 @@ class Contact():
 
 class ContactBook():
 
-    contact_book = [] # list of lists to store all contacts
+    def __init__(self):
+        self.contact_book = [] # list of lists to store all contacts
 
     def sortBook(self):
         # Sorts the book by last name.
@@ -40,7 +41,7 @@ class ContactBook():
             counter += 1 # number next to entry
             for item in row:
                 if isinstance(item, str):
-                    fixed_row.append(item.title())
+                    fixed_row.append(item)
                 elif isinstance(item, date):
                     bdaycalc = item
                     fixed_row.append(item.strftime("%Y-%m-%d"))
