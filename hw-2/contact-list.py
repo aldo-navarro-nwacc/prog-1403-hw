@@ -3,7 +3,7 @@ from datetime import date, datetime, timedelta
 from dateCheck import handleDates
 import csv
 
-class Contact():
+class Contact:
     
     def __init__(self, first_name:str, last_name:str, birth_date:str):
 
@@ -21,19 +21,19 @@ class Contact():
         self._contact.append(first_name.lower())
         self._contact.append(self.birthday)
 
-class ContactBook():
+class ContactBook:
 
     def __init__(self):
         self.contact_book = [] # list of lists to store all contacts
 
     def sortBook(self):
-        # Sorts the book by last name.
+        # Sorts the book by last name, then first, then by birthday.
         self.contact_book.sort()
         return
     
     def showBook(self):
         self.contact_book.sort() # Sort prior to listing
-        print(f"{'#':<3}{'Last Name':<20}{'First Name':<20}{'Birthday':<10} {'Age':<4}")
+        print(f"{'#':<3}|{'Last Name':<20}|{'First Name':<20}|{'Birthday':<10} | {'Age':<4}")
         counter = 0
         today = date.today() # used for age calculation
         for row in self.contact_book:
@@ -51,7 +51,7 @@ class ContactBook():
             if (today.month, today.day) < (bdaycalc.month, bdaycalc.day): # check if birthday has passed
                 age -= 1
             first, last, bday = row
-            print(f"{counter:<3}{first.title():<20}{last.title():<20}{bday:%Y-%m-%d} {age:<4}")
+            print(f"{counter:<3}|{first.title():<20}|{last.title():<20}|{bday:%Y-%m-%d} | {age:<4}")
 
         return
 
@@ -90,7 +90,7 @@ class ContactBook():
 
     def readFromCSV(self):
         try:
-            with open("Contacts.csv", 'r', newline='') as csvfile:
+            with open("Contacts.csv", 'r', newline='', encoding='UTF-8') as csvfile:
                 filereader = csv.reader(csvfile, delimiter=',')
                 for row in filereader:
                     t_contact = Contact(row[1], row[0], row[2])
@@ -101,7 +101,7 @@ class ContactBook():
 
     def writeToCSV(self):
         try:
-            with open("Contacts.csv", "w", newline='') as csvfile:
+            with open("Contacts.csv", "w", newline='', encoding='UTF-8') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',')
                 for row in self.contact_book:
                     filewriter.writerow(row)
