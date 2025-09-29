@@ -1,0 +1,60 @@
+Create a set of related classes to manage vehicle sales data from a supplied file.
+The class definitions will include composition and inheritance, and the organization of the objects
+made from these classes will demonstrate polymorphism.
+
+Rules:
+1. Print these three lines of text into the console
+    a. "HW3 - Vehicle Sales"
+    b. "Solution by [name]"
+    c. A blank line
+
+2. Defind a Brand class to maintain information about individual brands of vehicles.
+Each object of this class must contain the brand name (Nissan, Toyota...) and a list of
+all the models of that brand found in the data file.
+
+3. Define a Model class to maintain information about a single model of vehicle. 
+The data fields in each object of this class must include the brand name, model name, and
+an object containing sales data for that model for one calendar year (12 integer values)
+
+4. Define a Sales class to hold one calendar year's worth of sales data, by month, for
+a single brand and model of vehicle (ex. Ford Escape). You will need one object of this 
+type in each instance of the Model class
+
+5. Define a menu that will give the user the following choices by number:
+    a. Import Vehicle Sales Data from a file   
+    b. Display a list of annual sales counts for all vehicle Brands and Models found
+    in the data file. Include the aggregate sales data for all models of each brand 
+    for the entire calendar year.
+    c. Display a list of monthly sales counts for all vehicle Brands and Models found in 
+	the data file. Include the aggregate sales data for all models of each brand for the 
+	entire calendar year.
+	d. Display a list of annual sales totals for all Models of a single, user-selected
+	Brand found in the data file. Include the aggregate sales data for all models of 
+	the selected brand for the entire calendar year.
+	e. Display a list of monthly sales totals for all Models of a single, user-selected Brand 
+	found in the data file. Include the aggregate sales data for all models of the selected 
+	brand for the entire calendar year.
+	f. Exit
+	
+6. To import the vehicle sales data, open the file "US Vehicle Model Sales by Month 2025.txt"
+and read it asa  tab-separated-values file. 
+Note that there are several lines of text before the column headings in this file.
+	
+7. When displaying saled data, follow these guidelines and include thosands separators:
+    a. All the fields must be alligned in columns
+    b. Brand and Model names must be left-justified
+    c. Sales values must be right justified and include thousands separators
+
+8. Allow the user to repeart the process of making choices from the menu until
+they choose the Exit option
+	
+9. Print the message "HW3 Complete" into the console.
+
+10. Each class definition must be in its own file
+
+	
+	
+	
+	
+	
+	
