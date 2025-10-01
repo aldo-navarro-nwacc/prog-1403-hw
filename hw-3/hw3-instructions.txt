@@ -37,7 +37,7 @@ type in each instance of the Model class
 	f. Exit
 	
 6. To import the vehicle sales data, open the file "US Vehicle Model Sales by Month 2025.txt"
-and read it asa  tab-separated-values file. 
+and read it as a tab-separated-values file. 
 Note that there are several lines of text before the column headings in this file.
 	
 7. When displaying saled data, follow these guidelines and include thosands separators:
