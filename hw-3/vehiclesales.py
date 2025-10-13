@@ -21,17 +21,19 @@ class Brand:
 
 
 
-class Model(Brand):
+class Model(dict):
 
     def __init__(self):
-        self.__temp_model_list = {}
+        self.__temp_model_list = collections.defaultdict(list)
+        #for key in brandList.__car_brand_list:
+        #    self.__temp_model_list[key] = []
         
     def __str__(self):
         self.finalizeList()
-        return str(self.__model_list)
+        return str(self.__temp_model_list)
     
-    def appendList(self, newItem: str):
-        ...
+    def appendList(self, brand: str, newItem: str):
+        self.__temp_model_list[brand].append(newItem)
     
     def finalizeList(self):
         ...
@@ -40,6 +42,11 @@ class Model(Brand):
 class Sales:
     ...
 
+def removeFirstWord(text, word): # remove first word, kinda messy but it works
+    words = text.split()
+    if words and words[0] == word:
+        return ' '.join(words[1:])
+    return text
 
 def readFromFile(filename:str):
     header_flag = False
@@ -54,19 +61,34 @@ def readFromFile(filename:str):
 
                 if header_flag: # if the flag is set (header has been passed)
                     car_brand = str(row[0].split(" ", 1)[0]) # gives only the brand
-                    if car_brand == 'Alfa':
-                        car_brand += ' Romeo' # exception for Alfa Romeo
-                    if car_brand == 'Land':
-                        car_brand += ' Rover' # exception for Land Rover
                     
-                    #car_model = str(row[0].split(" ", 1)[1]) # gives only the model
+                    if car_brand == 'Alfa': # exception for Alfa Romeo
+                        car_brand += ' Romeo' 
+                        temp_str = str(row[0].split(" ", 1)[1])
+                        car_model = removeFirstWord(temp_str, 'Romeo')
 
+                    elif car_brand == 'Land': # exception for Land Rover
+                        car_brand += ' Rover'
+                        temp_str = str(row[0].split(" ", 1)[1])
+                        car_model = removeFirstWord(temp_str, 'Rover')
+
+                    else:
+                        car_model = str(row[0].split(" ", 1)[1]) # gives only the model
+                        
                     brandList.appendList(car_brand)
+                    modelList.appendList(car_brand, car_model)
+
     except IOError as e: print(f"!! Error reading file: {e}")
 
 
 brandList = Brand()
+modelList = Model()
+# this will all be removed when testing is complete
 readFromFile("US Vehicle Model Sales by Month 2025.txt")
 print()
-print(brandList)
-print()
+print(brandList, '\n')
+print(modelList)
+
+value = 'Tahoe' in [item for sublist in modelList.values() for item in sublist]
+
+print(value)
