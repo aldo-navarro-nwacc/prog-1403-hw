@@ -21,26 +21,31 @@ class Brand:
 
 
 
-class Model(dict):
+class Model:
 
     def __init__(self):
-        self.__temp_model_list = collections.defaultdict(list)
+        self.model_list = collections.defaultdict(list)
         #for key in brandList.__car_brand_list:
-        #    self.__temp_model_list[key] = []
+        #    self.model_list[key] = []
         
     def __str__(self):
-        self.finalizeList()
-        return str(self.__temp_model_list)
+        return str(self.model_list)
     
     def appendList(self, brand: str, newItem: str):
-        self.__temp_model_list[brand].append(newItem)
+        self.model_list[brand].append(newItem)
     
-    def finalizeList(self):
-        ...
+    def modelExists(self, model_name, brand: str | None = None):
+        if brand:
+            return model_name in self.model_list.get(brand, [])
+        else:
+            return any(model_name in models for models in self.model_list.values())
 
 
 class Sales:
-    ...
+    
+    def __init__(self):
+        self.__yearly_sales = {item: [] for item in modelList.model_list}
+        print(self.__yearly_sales)
 
 def removeFirstWord(text, word): # remove first word, kinda messy but it works
     words = text.split()
@@ -75,6 +80,7 @@ def readFromFile(filename:str):
                     else:
                         car_model = str(row[0].split(" ", 1)[1]) # gives only the model
                         
+                    #print(row[1])
                     brandList.appendList(car_brand)
                     modelList.appendList(car_brand, car_model)
 
@@ -83,12 +89,10 @@ def readFromFile(filename:str):
 
 brandList = Brand()
 modelList = Model()
+
+
 # this will all be removed when testing is complete
 readFromFile("US Vehicle Model Sales by Month 2025.txt")
+salesList = Sales()
 print()
 print(brandList, '\n')
-print(modelList)
-
-value = 'Tahoe' in [item for sublist in modelList.values() for item in sublist]
-
-print(value)
