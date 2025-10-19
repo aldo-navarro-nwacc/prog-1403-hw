@@ -19,8 +19,6 @@ class Brand:
         self.__car_brand_list.sort(); del self.__temp_brand_list # delete temp to save some memory
         self.__car_brand_list = tuple(self.__car_brand_list) # tuple is hashable
 
-
-
 class Model:
 
     def __init__(self):
@@ -41,11 +39,14 @@ class Model:
             return any(model_name in models for models in self.model_list.values())
 
 
-class Sales:
+class Sales(Model):
     
-    def __init__(self):
+    def __init__(self):#, model_key):
+        super().__init__()
         self.__yearly_sales = {item: [] for item in modelList.model_list}
         print(self.__yearly_sales)
+
+    
 
 def removeFirstWord(text, word): # remove first word, kinda messy but it works
     words = text.split()
@@ -95,4 +96,6 @@ modelList = Model()
 readFromFile("US Vehicle Model Sales by Month 2025.txt")
 salesList = Sales()
 print()
-print(brandList, '\n')
+#print(brandList, '\n')
+print()
+#print(salesList.__yearly_sales)
