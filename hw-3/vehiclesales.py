@@ -54,6 +54,10 @@ class Sales:
     
     def __init__(self):#, model_key):
         self.sales = collections.defaultdict(dict)
+        self.header: List[str] = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ]
 
     def add(self, brand: str, model: str, monthly: List[Optional[int]]):
         if len(monthly) != 12:

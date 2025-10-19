@@ -1,7 +1,7 @@
 import vehiclesales as vs
 
-def fmt_int(n):
-    return f"{n:,}" if isinstance(n, int) else "-" # comma separate integers
+def fmt_int(n: int): # comma separate all integers
+    return f"{n:,}" if isinstance(n, int) else "-"
 
 def import_data(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
     filename = 'US Vehicle Model Sales by Month 2025.txt'
@@ -16,6 +16,40 @@ def ensure_loaded(loaded):
     if not loaded:
         print("!!! No data loaded into the program!\n Choose option 1 first, then retry.\n")
     return loaded
+
+def show_annual_all(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
+    print("\n--- Annual sales for All Models (All Brands) ---")
+    for brand in brands.items:
+        print(f"\n{brand}") # print the brand first
+        rows = []
+        for m in models.getModels(brand):
+            total = sales.yearly_total_by_model(brand, m)
+            rows.append((m, 0 if total is None else total))
+
+        rows.sort(key = lambda x: x[1], reverse = True)
+        if not rows:
+            print(" (no models)")
+            continue
+        width = max(6, max(len(r[0]) for r in rows))
+        for model_name, total in rows:
+            print(f"  {model_name:<{width}}  {fmt_int(total)}")
+
+def show_monthly_all(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
+    print("\n--- Monthly sales for All Models (All Brands) ---")
+    header = ["Model"] + sales.header
+    for brand in brands.items:
+        print(f"\n{brand}")
+        rows = []
+        for m in models.getModels(brand):
+            monthly = sales.get_model(brand, m) or [None]*12
+            rows.append((m, monthly))
+        if not rows:
+            print("  (no models)")
+            continue
+        namew = max(5, max(len(r[0]) for r in rows))
+        print(" " + f"{header[0]:<{namew}}  " + "  ".join(f"{h:>7}" for h in sales.header))
+        for name, arr in rows:
+            print(" " + f"{name:<{namew}}  " + "  ".join(f"{fmt_int(v):>7}" for v in arr)) 
 
 def main():
     print("Vehicle Sales")
@@ -40,12 +74,12 @@ def main():
 
             if user_input == 2: # annual sales for ALL brands
                 if ensure_loaded(loaded):
-                    ...
+                    show_annual_all(brands, models, sales)
 
 
             if user_input == 3: # month-by-month sales for ALL brands
                 if ensure_loaded(loaded):
-                    ...
+                    show_monthly_all(brands, models, sales)
 
 
             if user_input == 4: # annual sales for ONE brand
