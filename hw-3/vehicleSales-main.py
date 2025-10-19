@@ -47,9 +47,9 @@ def show_monthly_all(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
             print("  (no models)")
             continue
         namew = max(5, max(len(r[0]) for r in rows))
-        print(" " + f"{header[0]:<{namew}}  " + "  ".join(f"{h:>7}" for h in sales.header))
+        print(" " + f"{header[0]:<{namew}}  " + "  ".join(f"{h:>6}" for h in sales.header))
         for name, arr in rows:
-            print(" " + f"{name:<{namew}}  " + "  ".join(f"{fmt_int(v):>7}" for v in arr)) 
+            print(" " + f"{name:<{namew}}  " + "  ".join(f"{fmt_int(v):>6}" for v in arr)) 
 
 def main():
     print("Vehicle Sales")
