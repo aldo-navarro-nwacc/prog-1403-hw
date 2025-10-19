@@ -18,7 +18,7 @@ def ensure_loaded(loaded):
     return loaded
 
 def show_annual_all(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
-    print("\n--- Annual sales for All Models (All Brands) ---")
+    print("\n=== Annual sales for All Models (All Brands) ===")
     for brand in brands.items:
         print(f"\n{brand}") # print the brand first
         rows = []
@@ -35,7 +35,7 @@ def show_annual_all(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
             print(f"  {model_name:<{width}}  {fmt_int(total)}")
 
 def show_monthly_all(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
-    print("\n--- Monthly sales for All Models (All Brands) ---")
+    print("\n=== Monthly sales for All Models (All Brands) ===")
     header = ["Model"] + sales.header
     for brand in brands.items:
         print(f"\n{brand}")
@@ -50,6 +50,60 @@ def show_monthly_all(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
         print(" " + f"{header[0]:<{namew}}  " + "  ".join(f"{h:>6}" for h in sales.header))
         for name, arr in rows:
             print(" " + f"{name:<{namew}}  " + "  ".join(f"{fmt_int(v):>6}" for v in arr)) 
+
+def list_brands(brands: vs.Brand):
+    items = list(brands.items)
+    if not items:
+        print("No brands loaded!")
+        return
+    print(f"\nAvailable brands ({len(items)}):")
+    print(", ".join(items))
+    print()
+
+def pick_brand(brands: vs.Brand):
+    list_brands(brands)
+    name = input("Enter brand name as shown > ").strip()
+    if not name:
+        return None
+    
+    for b in brands.items:
+        if b.lower() == name.lower():
+            return b
+    print(f"!! Brand '{name}' not found. Please try again.\n")
+    return None
+
+def show_annual_one(brand: str, models: vs.Model, sales: vs.Sales):
+    print(f"\n=== Annual sales for all Models - {brand} ===")
+    rows = []
+    for m in models.getModels(brand):
+        total = sales.yearly_total_by_model(brand, m)
+        rows.append((m, 0 if total is None else total))
+    rows.sort(key = lambda x: x[1], reverse = True)
+    if not rows:
+        print("  (no models)")
+        return
+    width = max(6, max(len(r[0]) for r in rows))
+    for model_name, total in rows:
+        print(f" {model_name:<{width}}   {fmt_int(total)}")
+    print(f"\n Brand YTD Total: {fmt_int(sales.yearly_total_by_brand(brand))}")
+
+def show_monthly_one(brand: str, models: vs.Model, sales: vs.Sales):
+    print(f"\n=== Monthly sales for all Models - {brand} ===")
+    rows = []
+    for m in models.getModels(brand):
+        monthly = sales.get_model(brand, m) or [None]*12
+        rows.append((m, monthly))
+    if not rows:
+        print("  (no models)")
+        return
+    namew = max(5, max(len(r[0]) for r in rows))
+    print("  " + f"{'Model':<{namew}}  " + "  ".join(f"{h:>6}" for h in sales.header))
+    for name, arr in rows:
+        print("  " + f"{name:<{namew}}  " + "  ".join(f"{fmt_int(v):>6}" for v in arr))
+    brand_monthly = sales.monthly_total_by_brand(brand)
+    print("\n  " + f"{'Total':<{namew}}  " + "  ".join(f"{fmt_int(v):>6}" for v in brand_monthly))
+    print(f"  {'YTD':<{namew}}  " + f"{fmt_int(sum(v for v in brand_monthly if isinstance(v, int))):>6}")
+    print()
 
 def main():
     print("Vehicle Sales")
@@ -84,12 +138,16 @@ def main():
 
             if user_input == 4: # annual sales for ONE brand
                 if ensure_loaded(loaded):
-                    ...
+                    b = pick_brand(brands)
+                    if b:
+                        show_annual_one(b, models, sales)
 
 
             if user_input == 5: # month-by-month sales for ONE brand
                 if ensure_loaded(loaded):
-                    ...
+                    b = pick_brand(brands)
+                    if b:
+                        show_monthly_one(b, models, sales)
 
                 
             if user_input == 6: 
