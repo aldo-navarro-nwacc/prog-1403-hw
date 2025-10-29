@@ -1,6 +1,7 @@
 # PROG 1403 - Aldo Navarro - HW3 Vehicle Sales
 import vehiclesales as vs
 
+
 def fmt_int(n: int): # comma separate all integers
     return f"{n:,}" if isinstance(n, int) else "-"
 
