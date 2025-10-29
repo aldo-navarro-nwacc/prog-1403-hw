@@ -1,10 +1,11 @@
+# PROG 1403 - Aldo Navarro - HW3 Vehicle Sales
 import vehiclesales as vs
 
 def fmt_int(n: int): # comma separate all integers
     return f"{n:,}" if isinstance(n, int) else "-"
 
 def import_data(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
-    filename = 'US Vehicle Model Sales by Month 2025.txt'
+    filename = 'US Vehicle Model Sales by Month 2025.txt' # filename 
     vs.readFromFile(filename, brands, models, sales)
     brands.finalizeList()
     total_brands = len(brands.items)
@@ -50,6 +51,7 @@ def show_monthly_all(brands: vs.Brand, models: vs.Model, sales: vs.Sales):
         print(" " + f"{header[0]:<{namew}}  " + "  ".join(f"{h:>6}" for h in sales.header))
         for name, arr in rows:
             print(" " + f"{name:<{namew}}  " + "  ".join(f"{fmt_int(v):>6}" for v in arr)) 
+    print()
 
 def list_brands(brands: vs.Brand):
     items = list(brands.items)
@@ -106,7 +108,7 @@ def show_monthly_one(brand: str, models: vs.Model, sales: vs.Sales):
     print()
 
 def main():
-    print("Vehicle Sales")
+    print("\nHw3 - Vehicle Sales\nSolution by Aldo Navarro\n")
     brands = vs.Brand()
     models = vs.Model()
     sales = vs.Sales()
@@ -123,18 +125,14 @@ def main():
             user_input = int(input("\nEnter a menu item > "))
             if user_input == 1: # import file
                 loaded = import_data(brands, models, sales)
-                ...
-
 
             if user_input == 2: # annual sales for ALL brands
                 if ensure_loaded(loaded):
                     show_annual_all(brands, models, sales)
 
-
             if user_input == 3: # month-by-month sales for ALL brands
                 if ensure_loaded(loaded):
                     show_monthly_all(brands, models, sales)
-
 
             if user_input == 4: # annual sales for ONE brand
                 if ensure_loaded(loaded):
@@ -142,17 +140,16 @@ def main():
                     if b:
                         show_annual_one(b, models, sales)
 
-
             if user_input == 5: # month-by-month sales for ONE brand
                 if ensure_loaded(loaded):
                     b = pick_brand(brands)
                     if b:
                         show_monthly_one(b, models, sales)
-
                 
             if user_input == 6: 
-                print("Goodbye"); break
-        except ValueError: print("!!! Invalid menu entry")
+                print("HW3 Complete"); break
+        except ValueError as e: print(f"!!! Invalid entry: {e}")
+        except KeyboardInterrupt: print("\nHW3 Complete"); break
 
 if __name__ == "__main__":
     main()

@@ -64,11 +64,11 @@ class Sales:
             raise ValueError("Monthly must contain exactly 12 entries")
         self.sales[brand][model] = monthly
 
-    #get sales data for a specific car make and model
+    # get sales data for a specific car make and model
     def get_model(self, brand: str, model: str):
         return self.sales.get(brand, {}).get(model)
     
-    #get sales data for all models for a specific brand
+    # get sales data for all models for a specific brand
     def get_brand(self, brand: str):
         return self.sales.get(brand, {})
     
@@ -160,3 +160,5 @@ def readFromFile(filename:str, brandList: Brand, modelList: Model, salesList: Sa
 
     except IOError as e: print(f"!! Error reading file: {e}")
 
+if __name__ == "__main__":
+    print("Please run the vehicleSales-main.py file")
