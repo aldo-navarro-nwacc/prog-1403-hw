@@ -2,6 +2,7 @@
 import vehiclesales as vs
 
 
+
 def fmt_int(n: int): # comma separate all integers
     return f"{n:,}" if isinstance(n, int) else "-"
 
